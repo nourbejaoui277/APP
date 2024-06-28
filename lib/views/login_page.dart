@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'signup_page.dart';
 import 'package:app1/controllers/login_controller.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  // injection of login controller
+  final LoginController _loginController = LoginController();
+  LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,8 @@ class LoginPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         TextField(
+          // added controller to read input values
+          controller: _loginController.usernameController,
           decoration: InputDecoration(
               hintText: "Username",
               border: OutlineInputBorder(
@@ -51,6 +56,8 @@ class LoginPage extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         TextField(
+          // added controller to read input values
+          controller: _loginController.passwordController,
           decoration: InputDecoration(
             hintText: "Password",
             border: OutlineInputBorder(
@@ -64,7 +71,26 @@ class LoginPage extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            if (_loginController.usernameController.text != "" ||
+                _loginController.passwordController != "") {
+              if (_loginController.validateUsername(
+                      _loginController.usernameController.text) !=
+                  null) {
+                Fluttertoast.showToast(
+                    msg: _loginController.validateUsername(
+                        _loginController.usernameController.text)!);
+              } else if (_loginController.validatePassword(
+                      _loginController.passwordController.text) !=
+                  null) {
+                Fluttertoast.showToast(
+                    msg: _loginController.validatePassword(
+                        _loginController.passwordController.text)!);
+              }
+              Fluttertoast.showToast(msg: "username & password are empty");
+              return;
+            }
+          },
           style: ElevatedButton.styleFrom(
             shape: const StadiumBorder(),
             padding: const EdgeInsets.symmetric(vertical: 16),

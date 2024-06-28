@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LoginController {
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   // Function to handle login process
   void login(String username, String password) {
     // Implement your login logic here

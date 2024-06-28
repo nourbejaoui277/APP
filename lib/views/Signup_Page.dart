@@ -127,8 +127,7 @@ class SignupPage extends StatelessWidget {
                         width: 30.0,
                         decoration: const BoxDecoration(
                           image: DecorationImage(
-                              image: AssetImage(
-                                  'assets/images/login_signup/google.png'),
+                              image: AssetImage('login_signup/google.png'),
                               fit: BoxFit.cover),
                           shape: BoxShape.circle,
                         ),
