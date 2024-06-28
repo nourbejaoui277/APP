@@ -72,23 +72,26 @@ class LoginPage extends StatelessWidget {
         const SizedBox(height: 10),
         ElevatedButton(
           onPressed: () {
-            if (_loginController.usernameController.text != "" ||
-                _loginController.passwordController != "") {
-              if (_loginController.validateUsername(
-                      _loginController.usernameController.text) !=
-                  null) {
-                Fluttertoast.showToast(
-                    msg: _loginController.validateUsername(
-                        _loginController.usernameController.text)!);
-              } else if (_loginController.validatePassword(
-                      _loginController.passwordController.text) !=
-                  null) {
-                Fluttertoast.showToast(
-                    msg: _loginController.validatePassword(
-                        _loginController.passwordController.text)!);
-              }
+            if (_loginController.usernameController.text == "" ||
+                _loginController.passwordController == "") {
               Fluttertoast.showToast(msg: "username & password are empty");
               return;
+            } else if (_loginController.validateUsername(
+                    _loginController.usernameController.text) !=
+                null) {
+              Fluttertoast.showToast(
+                  msg: _loginController.validateUsername(
+                      _loginController.usernameController.text)!);
+              return;
+            } else if (_loginController.validatePassword(
+                    _loginController.passwordController.text) !=
+                null) {
+              Fluttertoast.showToast(
+                  msg: _loginController.validatePassword(
+                      _loginController.passwordController.text)!);
+              return;
+            } else {
+              Fluttertoast.showToast(msg: "success");
             }
           },
           style: ElevatedButton.styleFrom(

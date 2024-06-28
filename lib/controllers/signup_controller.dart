@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 
 class SignupController {
   // Function to handle signup process
-  void signup(String username, String email, String password) {
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmpasswordController = TextEditingController();
+  void signup(
+      String username, String email, String password, String confirmpassword) {
     // Implement your signup logic here
 
     // For example, you might call an API to register the user
     print('Signing up user with:');
     print('Username: $username');
     print('Email: $email');
+
     // For security reasons, do not print or store passwords in plain text.
     // Instead, you should hash or encrypt the password before sending it anywhere.
   }
@@ -43,6 +49,15 @@ class SignupController {
     if (password.length < 6) {
       return 'Password must be at least 6 characters';
     }
-    return null; // Return null if validation succeeds
+
+    // Function to validate  confirm password for signup
+    String? validateconfirmPassword(String? confirmpassword) {
+      if (confirmpassword != password ||
+          confirmpassword == null ||
+          confirmpassword.isEmpty) {
+        return 'Password & Confirm Password do not match';
+      }
+      return null; // Return null if validation succeeds
+    }
   }
 }
