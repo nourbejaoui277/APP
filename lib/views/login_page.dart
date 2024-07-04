@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'signup_page.dart';
+import 'home_page.dart';
 import 'package:app1/controllers/login_controller.dart';
 
 class LoginPage extends StatelessWidget {
@@ -73,8 +74,8 @@ class LoginPage extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             if (_loginController.usernameController.text == "" ||
-                _loginController.passwordController == "") {
-              Fluttertoast.showToast(msg: "username & password are empty");
+                _loginController.passwordController.text == "") {
+              Fluttertoast.showToast(msg: "Username & password are empty");
               return;
             } else if (_loginController.validateUsername(
                     _loginController.usernameController.text) !=
@@ -91,7 +92,12 @@ class LoginPage extends StatelessWidget {
                       _loginController.passwordController.text)!);
               return;
             } else {
-              Fluttertoast.showToast(msg: "success");
+              Fluttertoast.showToast(msg: "Success");
+              // Navigate to HomePage on successful login
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
             }
           },
           style: ElevatedButton.styleFrom(

@@ -83,7 +83,7 @@ class SignupPage extends StatelessWidget {
                   const SizedBox(height: 20),
                   TextField(
                     // added controller to read input values
-                    controller: _signupController.confirmpasswordController,
+                    controller: _signupController.confirmPasswordController,
                     decoration: InputDecoration(
                       hintText: "Confirm Password",
                       border: OutlineInputBorder(
@@ -104,7 +104,7 @@ class SignupPage extends StatelessWidget {
                       if (_signupController.usernameController.text == "" ||
                           _signupController.emailController == "" ||
                           _signupController.passwordController == "" ||
-                          _signupController.confirmpasswordController == "") {
+                          _signupController.confirmPasswordController == "") {
                         Fluttertoast.showToast(
                             msg:
                                 "username & email & password & confirm password are empty");
@@ -132,12 +132,12 @@ class SignupPage extends StatelessWidget {
                         return;
                       } else if (_signupController.validatePassword(
                               _signupController
-                                  .confirmpasswordController.text) !=
+                                  .confirmPasswordController.text) !=
                           null) {
                         Fluttertoast.showToast(
                             msg: _signupController.validatePassword(
                                 _signupController
-                                    .confirmpasswordController.text)!);
+                                    .confirmPasswordController.text)!);
                         return;
                       } else {
                         Fluttertoast.showToast(msg: "success");
