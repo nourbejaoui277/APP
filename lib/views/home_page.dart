@@ -4,41 +4,84 @@ import 'discover_page.dart';
 import 'wishlist_page.dart';
 import 'profile_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int pageIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sparkling'),
+        title: Text('Sparkling'),
         backgroundColor: Colors.purple,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              // Implement search functionality here
-            },
-          ),
+      ),
+      body: _buildPageContent(),
+      bottomNavigationBar: _buildBottomNavigationBar(context),
+    );
+  }
+
+  Widget _buildPageContent() {
+    switch (pageIndex) {
+      case 0:
+        return _buildHomePage();
+      case 1:
+        return CategoriesPage(category: "category");
+      case 2:
+        return DiscoverPage();
+      case 3:
+        return WishlistPage();
+      case 4:
+        return ProfilePage();
+      default:
+        return _buildHomePage();
+    }
+  }
+
+  Widget _buildHomePage() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildPageTitle('Sparkling'),
+          SizedBox(height: 16),
+          _buildCategories(context),
+          SizedBox(height: 16),
+          _buildSectionTitle('Promotions'),
+          _buildPromotions(),
+          SizedBox(height: 16),
+          _buildSectionTitle('Best Sellers'),
+          _buildBestSellers(),
+          SizedBox(height: 16),
+          _buildSectionTitle('Style/Mood Picker'),
+          _buildStyleMoodPicker(),
+          SizedBox(height: 16),
+          _buildSectionTitle('Selections for You'),
+          _buildSelectionsForYou(),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildSectionTitle('Categories'),
-            _buildCategories(),
-            _buildSectionTitle('Promotions'),
-            _buildPromotions(),
-            _buildSectionTitle('Best Sellers'),
-            _buildBestSellers(),
-            _buildSectionTitle('Pick a Style or Mood'),
-            _buildStyleMoodPicker(),
-            _buildSectionTitle('Selections for You'),
-            _buildSelectionsForYou(),
-          ],
+    );
+  }
+
+  Widget _buildPageTitle(String title) {
+    return Container(
+      padding: EdgeInsets.all(16.0),
+      color: Colors.purple,
+      child: Center(
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(context),
     );
   }
 
@@ -52,36 +95,60 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildCategories() {
+  Widget _buildCategories(BuildContext context) {
     return Container(
-      height: 100,
+      height: 120,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          _buildCategoryCard('Men'),
-          _buildCategoryCard('Women'),
-          _buildCategoryCard('Kids'),
-          _buildCategoryCard('Accessories'),
+          _buildCategoryCard('Men', 'assets/images/men.jpg', context),
+          _buildCategoryCard('Women', 'assets/images/women.jpg', context),
+          _buildCategoryCard('Kids', 'assets/images/kids.jpg', context),
+          _buildCategoryCard(
+              'Accessories', 'assets/images/accessories.jpg', context),
         ],
       ),
     );
   }
 
-  Widget _buildCategoryCard(String category) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-      ),
-      color: Colors.purple.withOpacity(0.1),
-      child: Container(
-        width: 100,
-        child: Center(child: Text(category)),
+  Widget _buildCategoryCard(
+      String category, String imagePath, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _navigateToCategoryPage(context, category);
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Container(
+          width: 120,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            image: DecorationImage(
+              image: AssetImage(imagePath),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Center(
+            child: Container(
+              color: Colors.black.withOpacity(0.5),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  category,
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildPromotions() {
-    // Replace with your actual promotion data
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       height: 100,
@@ -94,7 +161,6 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildBestSellers() {
-    // Replace with your actual best sellers data
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       height: 100,
@@ -107,7 +173,6 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildStyleMoodPicker() {
-    // Replace with your actual style/mood picker data
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       height: 100,
@@ -120,7 +185,6 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildSelectionsForYou() {
-    // Replace with your actual selections data
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       height: 100,
@@ -156,41 +220,22 @@ class HomePage extends StatelessWidget {
           label: 'Me',
         ),
       ],
+      currentIndex: pageIndex,
       selectedItemColor: Colors.purple,
       unselectedItemColor: Colors.grey,
       onTap: (index) {
-        switch (index) {
-          case 0:
-            // Navigate to Home (if necessary)
-            break;
-          case 1:
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CategoriesPage()),
-            );
-            break;
-          case 2:
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => DiscoverPage()),
-            );
-            break;
-          case 3:
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => WishlistPage()),
-            );
-            break;
-          case 4:
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
-            );
-            break;
-          default:
-          // Navigate to Home or handle other cases
-        }
+        setState(() {
+          pageIndex = index;
+        });
       },
+    );
+  }
+
+  void _navigateToCategoryPage(BuildContext context, String category) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => CategoriesPage(category: category)),
     );
   }
 }

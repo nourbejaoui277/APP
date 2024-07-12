@@ -1,9 +1,19 @@
+import 'package:app1/utilities/database.dart';
 import 'package:flutter/material.dart';
-import 'views/login_page.dart';
+import 'package:provider/provider.dart';
+import 'package:app1/controllers/profile_controller.dart';
+import 'package:app1/views/login_page.dart';
 import 'views/home_page.dart';
+import 'package:app1/component/custom_footer.dart';
 
 void main() {
-  runApp(const MyApp());
+  DatabaseNourProject().initializeDb();
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ProfileController(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -17,8 +27,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      // Start with the LoginPage
-      home: LoginPage(),
+      home: const HomePage(),
     );
   }
 }

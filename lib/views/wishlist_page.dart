@@ -1,6 +1,19 @@
 import 'package:flutter/material.dart';
 
-class WishlistPage extends StatelessWidget {
+class WishlistPage extends StatefulWidget {
+  @override
+  _WishlistPageState createState() => _WishlistPageState();
+}
+
+class _WishlistPageState extends State<WishlistPage> {
+  List<String> _wishlistItems = [
+    'Item 1',
+    'Item 2',
+    'Item 3',
+    'Item 4',
+    'Item 5',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,15 +30,6 @@ class WishlistPage extends StatelessWidget {
       ),
     );
   }
-
-  // Replace with actual wishlist item data
-  List<String> _wishlistItems = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-  ];
 
   Widget _buildWishlistItem(String itemName) {
     return Card(
@@ -46,12 +50,84 @@ class WishlistPage extends StatelessWidget {
         trailing: IconButton(
           icon: Icon(Icons.remove_circle_outline),
           onPressed: () {
-            // Implement remove from wishlist functionality
+            _removeFromWishlist(itemName);
           },
         ),
         onTap: () {
-          // Implement navigation to product details or other actions
+          _navigateToProductDetails(itemName); // Navigate to product details
         },
+      ),
+    );
+  }
+
+  void _removeFromWishlist(String itemName) {
+    setState(() {
+      _wishlistItems.remove(itemName);
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$itemName removed from wishlist'),
+        duration: Duration(seconds: 2),
+        action: SnackBarAction(
+          label: 'UNDO',
+          onPressed: () {
+            _undoRemove(itemName);
+          },
+        ),
+      ),
+    );
+  }
+
+  void _undoRemove(String itemName) {
+    setState(() {
+      _wishlistItems.add(itemName);
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$itemName added back to wishlist'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _navigateToProductDetails(String itemName) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ProductDetailsPage(itemName: itemName)),
+    );
+  }
+}
+
+class ProductDetailsPage extends StatelessWidget {
+  final String itemName;
+
+  ProductDetailsPage({required this.itemName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Product Details'),
+        backgroundColor: Colors.purple,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Product Name: $itemName',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Back to Wishlist'),
+            ),
+          ],
+        ),
       ),
     );
   }

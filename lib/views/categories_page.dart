@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CategoriesPage extends StatelessWidget {
+  final String category;
+
+  CategoriesPage({
+    Key? key,
+    required this.category,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,13 +25,12 @@ class CategoriesPage extends StatelessWidget {
         ),
         itemCount: _categories.length,
         itemBuilder: (context, index) {
-          return _buildCategoryCard(_categories[index]);
+          return _buildCategoryCard(context, _categories[index]);
         },
       ),
     );
   }
 
-  // Replace with actual category data
   List<String> _categories = [
     'Men',
     'Women',
@@ -36,14 +42,16 @@ class CategoriesPage extends StatelessWidget {
     'Sports',
   ];
 
-  Widget _buildCategoryCard(String category) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: InkWell(
-        onTap: () {
-          // Implement navigation to category products or subcategories
-        },
+  Widget _buildCategoryCard(BuildContext context, String category) {
+    return GestureDetector(
+      onTap: () {
+        _navigateToCategory(context, category);
+      },
+      child: Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -62,5 +70,10 @@ class CategoriesPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _navigateToCategory(BuildContext context, String category) {
+    // Navigate to category-specific page
+    // Example: Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryProductsPage(category: category)));
   }
 }

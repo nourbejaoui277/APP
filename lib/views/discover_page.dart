@@ -40,7 +40,7 @@ class DiscoverPage extends StatelessWidget {
 
   Widget _buildFeaturedProducts() {
     return Container(
-      height: 200,
+      height: 220,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
@@ -54,41 +54,48 @@ class DiscoverPage extends StatelessWidget {
   }
 
   Widget _buildProductCard(String name, String imagePath, String price) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-            child: Image.asset(
-              imagePath,
-              fit: BoxFit.cover,
-              height: 120,
-              width: 200,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+    return GestureDetector(
+      onTap: () {},
+      child: Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        child: Container(
+          width: 160,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                  height: 120,
+                  width: double.infinity,
                 ),
-                SizedBox(height: 4),
-                Text(
-                  price,
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      price,
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -115,9 +122,7 @@ class DiscoverPage extends StatelessWidget {
         ),
         title: Text(name),
         subtitle: Text(price),
-        onTap: () {
-          // Implement navigation to product details
-        },
+        onTap: () {},
       ),
     );
   }
@@ -129,10 +134,25 @@ class DiscoverPage extends StatelessWidget {
       child: ListTile(
         leading: Icon(Icons.filter_list),
         title: Text('Apply Filters'),
-        onTap: () {
-          // Implement filter functionality
-        },
+        onTap: () {},
       ),
+    );
+  }
+}
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+      ),
+      home: DiscoverPage(),
     );
   }
 }
