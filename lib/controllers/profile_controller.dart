@@ -1,18 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:app1/models/order_model.dart';
 
 class ProfileController extends ChangeNotifier {
-  String _name = 'John Doe';
-  String _email = 'john.doe@example.com';
-  String _phone = '+1234567890';
+  String name = 'John Doe';
+  String email = 'john.doe@example.com';
+  String phone = '+1234567890';
 
-  String get name => _name;
-  String get email => _email;
-  String get phone => _phone;
+  List<Order> orders = [];
 
-  void updateProfile(String name, String email, String phone) {
-    _name = name;
-    _email = email;
-    _phone = phone;
+  ProfileController() {
+    fetchOrders();
+  }
+
+  void fetchOrders() {
+    orders = [
+      Order(
+        id: '12345',
+        date: DateTime(2024, 6, 12),
+        items: ['Item 1', 'Item 2'],
+        totalAmount: 50.0,
+        status: 'Delivered',
+      ),
+      Order(
+        id: '12346',
+        date: DateTime(2024, 6, 15),
+        items: ['Item 3', 'Item 4'],
+        totalAmount: 75.0,
+        status: 'Shipped',
+      ),
+    ];
     notifyListeners();
   }
+
+  void updateProfile(String text, String text2, String text3) {}
 }

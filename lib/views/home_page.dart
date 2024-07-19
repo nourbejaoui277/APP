@@ -3,9 +3,10 @@ import 'categories_page.dart';
 import 'discover_page.dart';
 import 'wishlist_page.dart';
 import 'profile_page.dart';
+import 'settings_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -63,6 +64,14 @@ class _HomePageState extends State<HomePage> {
           SizedBox(height: 16),
           _buildSectionTitle('Selections for You'),
           _buildSelectionsForYou(),
+          SizedBox(height: 16),
+          //ElevatedButton(
+          //onPressed: () {
+          //Navigator.pushNamed(
+          //  context, '/settings'); // Navigate to SettingsPage
+          //},
+          //child: Text('Go to Settings'),
+          // ),
         ],
       ),
     );
@@ -115,7 +124,11 @@ class _HomePageState extends State<HomePage> {
       String category, String imagePath, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        _navigateToCategoryPage(context, category);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CategoriesPage(category: category)),
+        );
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -228,14 +241,6 @@ class _HomePageState extends State<HomePage> {
           pageIndex = index;
         });
       },
-    );
-  }
-
-  void _navigateToCategoryPage(BuildContext context, String category) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => CategoriesPage(category: category)),
     );
   }
 }

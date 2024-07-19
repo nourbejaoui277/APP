@@ -1,32 +1,31 @@
 import 'package:app1/models/UserModel.dart';
 import 'package:app1/utilities/database.dart';
 
-class localDbService {
+class LocalDbService {
   DatabaseNourProject databaseNourProject = DatabaseNourProject();
-  // write the functions that will call the functions inside the database that will return the data
 
-// database functions only returns raw data from the app database
+  // Write the functions that will call the functions inside the database that will return the data
+  // Database functions only return raw data from the app database
+  // Local service transforms data returned from the Database class and then returns it to the controller
 
-// local service transforms data returned from the Database class and then returns it to the controller
-
-  saveUser(UserModel model) async {
+  Future<int> saveUser(UserModel model) async {
     return await databaseNourProject.insertUser("nomTable", model.dataMap());
   }
 
-  readUser() async {
+  Future<List<Map<String, dynamic>>> readAllUsers() async {
     return await databaseNourProject.readAllUsers("nomTable");
   }
 
-  // another example
-  readUserByName(firstname, lastname) async {
+  Future<List<Map<String, dynamic>>> readUserByName(
+      String firstname, String lastname) async {
     return await databaseNourProject.readUserByName(firstname, lastname);
   }
 
-  deleteUser(final id) async {
-    return await databaseNourProject.deleteUser("NomTable", id);
+  Future<int> deleteUser(int id) async {
+    return await databaseNourProject.deleteUser("nomTable", id);
   }
 
-  updateUser(UserModel model) async {
-    return await databaseNourProject.updateUser("NomTable", model.dataMap());
+  Future<int> updateUser(UserModel model) async {
+    return await databaseNourProject.updateUser("nomTable", model.dataMap());
   }
 }

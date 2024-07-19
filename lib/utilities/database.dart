@@ -5,6 +5,7 @@ import 'dart:async';
 
 class DatabaseNourProject {
   static Database? _db;
+
   Future<Database?> get db async {
     if (_db == null) {
       _db = await initializeDb();
@@ -16,50 +17,59 @@ class DatabaseNourProject {
 
   initializeDb() async {
     String databasePath = await getDatabasesPath();
-    String path = join(databasePath, "appDB");
-    Database mydb =
-        await openDatabase(path, onCreate: _onCreateDatabase, version: 1);
-    //onUpgrade; _onUpgradingDatabase);
+    String path = join(databasePath, "appDB.db");
+    Database mydb = await openDatabase(
+      path,
+      version: 1,
+      onCreate: _onCreateDatabase,
+      // onUpgrade: _onUpgradingDatabase, // Uncomment if you need an upgrade function
+    );
     return mydb;
   }
 
   _onCreateDatabase(Database db, int version) async {
-    Batch batch = db.batch();
-    batch.execute(
-        "CREATE TABLE nomTable ( id INTEGER PRIMARY KEY AUTOINCREMENT? ");
-    await batch.commit();
+    await db.execute('''
+      CREATE TABLE nomTable (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nom TEXT,
+        prenom TEXT,
+        username TEXT,
+        password TEXT,
+        email TEXT
+      )
+    ''');
   }
 
-  //table a remplacer par le nom de table et data par les données a insérer
-  insertUser(String table, data) async {
+  // Replace table with the actual table name and data with the data to insert
+  Future<int> insertUser(String table, Map<String, dynamic> data) async {
     Database? mydb = await db;
     int response = await mydb!.insert(table, data);
     return response;
   }
 
-  readAllUsers(String table) async {
+  Future<List<Map<String, dynamic>>> readAllUsers(String table) async {
     Database? mydb = await db;
-    List<Map> response = await mydb!.query(table);
+    List<Map<String, dynamic>> response = await mydb!.query(table);
     return response;
   }
 
-// another example
-  readUserByName(firstname, lastname) async {
+  // Example to read user by name
+  Future<List<Map<String, dynamic>>> readUserByName(
+      String firstname, String lastname) async {
     Database? mydb = await db;
     var response = await mydb!.rawQuery(
-        "SELECT * FROM ${"NomTable"} WHERE nom = ? AND prenom = ?",
+        "SELECT * FROM nomTable WHERE nom = ? AND prenom = ?",
         [lastname, firstname]);
     return response;
   }
 
-  Future<int> deleteUser(nomTable, id) async {
+  Future<int> deleteUser(String table, int id) async {
     Database? mydb = await db;
-    final res =
-        await mydb!.rawDelete("DELETE FROM $nomTable WHERE id = ?", [id]);
+    final res = await mydb!.rawDelete("DELETE FROM $table WHERE id = ?", [id]);
     return res;
   }
 
-  updateUser(String table, data) async {
+  Future<int> updateUser(String table, Map<String, dynamic> data) async {
     Database? mydb = await db;
     int response =
         await mydb!.update(table, data, where: 'id=?', whereArgs: [data['id']]);

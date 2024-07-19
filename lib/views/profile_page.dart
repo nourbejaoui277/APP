@@ -1,30 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'edit_profile_page.dart';
+import '/controllers/profile_controller.dart';
+import 'order_details_page.dart';
 import 'change_password_page.dart';
-import 'package:app1/controllers/profile_controller.dart';
-
-void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => ProfileController(),
-      child: MyApp(),
-    ),
-  );
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-      ),
-      home: ProfilePage(),
-    );
-  }
-}
+import 'edit_profile_page.dart';
+import 'notifications_page.dart';
+import 'privacy_page.dart';
+import 'account_management_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -49,10 +31,10 @@ class ProfilePage extends StatelessWidget {
             _buildPersonalInfo(context, profileController),
             SizedBox(height: 20),
             _buildSectionTitle('Order History'),
-            _buildOrderHistory(),
+            _buildOrderHistory(context, profileController),
             SizedBox(height: 20),
             _buildSectionTitle('Settings'),
-            _buildSettings(),
+            _buildSettings(context), // Pass context to _buildSettings
           ],
         ),
       ),
@@ -162,62 +144,82 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildOrderHistory() {
+  Widget _buildOrderHistory(
+      BuildContext context, ProfileController profileController) {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: Column(
+        children: profileController.orders.map((order) {
+          return Column(
+            children: [
+              ListTile(
+                leading: Icon(Icons.shopping_cart),
+                title: Text('Order #${order.id}'),
+                subtitle: Text('Placed on ${order.date.toLocal()}'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => OrderDetailsPage(order: order),
+                    ),
+                  );
+                },
+              ),
+              Divider(height: 1),
+            ],
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildSettings(BuildContext context) {
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Column(
         children: [
-          ListTile(
-            leading: Icon(Icons.shopping_cart),
-            title: Text('Order #12345'),
-            subtitle: Text('Placed on 12th June 2024'),
-            onTap: () {
-              // Implement view order details functionality
-            },
+          _buildSettingsTile(
+            context,
+            icon: Icons.notifications,
+            title: 'Notifications',
+            destination: NotificationsPage(),
           ),
           Divider(height: 1),
-          ListTile(
-            leading: Icon(Icons.shopping_cart),
-            title: Text('Order #12346'),
-            subtitle: Text('Placed on 15th June 2024'),
-            onTap: () {},
+          _buildSettingsTile(
+            context,
+            icon: Icons.privacy_tip,
+            title: 'Privacy',
+            destination: PrivacyPage(),
           ),
           Divider(height: 1),
-          ListTile(
-            title: Center(child: Text('View All Orders')),
-            onTap: () {},
+          _buildSettingsTile(
+            context,
+            icon: Icons.account_circle,
+            title: 'Account Management',
+            destination: AccountManagementPage(),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSettings() {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: Column(
-        children: [
-          ListTile(
-            leading: Icon(Icons.notifications),
-            title: Text('Notifications'),
-            onTap: () {},
-          ),
-          Divider(height: 1),
-          ListTile(
-            leading: Icon(Icons.privacy_tip),
-            title: Text('Privacy'),
-            onTap: () {},
-          ),
-          Divider(height: 1),
-          ListTile(
-            leading: Icon(Icons.account_circle),
-            title: Text('Account Management'),
-            onTap: () {},
-          ),
-        ],
-      ),
+  Widget _buildSettingsTile(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required Widget destination,
+  }) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => destination),
+        );
+      },
     );
   }
 }
