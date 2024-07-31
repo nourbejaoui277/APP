@@ -72,7 +72,7 @@ class LoginPage extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             if (_loginController.usernameController.text == "" ||
                 _loginController.passwordController.text == "") {
               Fluttertoast.showToast(msg: "Username & password are empty");
@@ -92,12 +92,17 @@ class LoginPage extends StatelessWidget {
                       _loginController.passwordController.text)!);
               return;
             } else {
-              Fluttertoast.showToast(msg: "Success");
-              // Navigate to HomePage on successful login
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              );
+              bool loginSuccess = await _loginController.loginUser();
+              if (loginSuccess) {
+                Fluttertoast.showToast(msg: "Success");
+                // Navigate to HomePage on successful login
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              } else {
+                Fluttertoast.showToast(msg: "Invalid username or password");
+              }
             }
           },
           style: ElevatedButton.styleFrom(

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SignupPage extends StatelessWidget {
-  // injection of signup controller
   final SignupController _signupController = SignupController();
   SignupPage({super.key});
 
@@ -41,7 +40,6 @@ class SignupPage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   TextField(
-                    // added controller to read input values
                     controller: _signupController.usernameController,
                     decoration: InputDecoration(
                         hintText: "Username",
@@ -54,7 +52,6 @@ class SignupPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   TextField(
-                    // added controller to read input values
                     controller: _signupController.emailController,
                     decoration: InputDecoration(
                         hintText: "Email",
@@ -67,7 +64,6 @@ class SignupPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   TextField(
-                    // added controller to read input values
                     controller: _signupController.passwordController,
                     decoration: InputDecoration(
                       hintText: "Password",
@@ -82,7 +78,6 @@ class SignupPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   TextField(
-                    // added controller to read input values
                     controller: _signupController.confirmPasswordController,
                     decoration: InputDecoration(
                       hintText: "Confirm Password",
@@ -100,47 +95,13 @@ class SignupPage extends StatelessWidget {
               Container(
                   padding: const EdgeInsets.only(top: 3, left: 3),
                   child: ElevatedButton(
-                    onPressed: () {
-                      if (_signupController.usernameController.text == "" ||
-                          _signupController.emailController == "" ||
-                          _signupController.passwordController == "" ||
-                          _signupController.confirmPasswordController == "") {
-                        Fluttertoast.showToast(
-                            msg:
-                                "username & email & password & confirm password are empty");
-                        return;
-                      } else if (_signupController.validateUsername(
-                              _signupController.usernameController.text) !=
-                          null) {
-                        Fluttertoast.showToast(
-                            msg: _signupController.validateUsername(
-                                _signupController.usernameController.text)!);
-                        return;
-                      } else if (_signupController.validateEmail(
-                              _signupController.emailController.text) !=
-                          null) {
-                        Fluttertoast.showToast(
-                            msg: _signupController.validateEmail(
-                                _signupController.emailController.text)!);
-                        return;
-                      } else if (_signupController.validatePassword(
-                              _signupController.passwordController.text) !=
-                          null) {
-                        Fluttertoast.showToast(
-                            msg: _signupController.validatePassword(
-                                _signupController.passwordController.text)!);
-                        return;
-                      } else if (_signupController.validatePassword(
-                              _signupController
-                                  .confirmPasswordController.text) !=
-                          null) {
-                        Fluttertoast.showToast(
-                            msg: _signupController.validatePassword(
-                                _signupController
-                                    .confirmPasswordController.text)!);
-                        return;
-                      } else {
-                        Fluttertoast.showToast(msg: "success");
+                    onPressed: () async {
+                      try {
+                        await _signupController.signup();
+                        Fluttertoast.showToast(msg: "Sign up successful!");
+                        Navigator.pop(context);
+                      } catch (e) {
+                        Fluttertoast.showToast(msg: e.toString());
                       }
                     },
                     child: const Text(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:app1/utilities/database.dart';
 
 class SignupController {
   final TextEditingController usernameController = TextEditingController();
@@ -7,23 +8,53 @@ class SignupController {
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
-  void signup(
-      String username, String email, String password, String confirmPassword) {
-    // signup logic here
+  final DatabaseNourProject _databaseNourProject = DatabaseNourProject();
 
-    print('Signing up user with:');
-    print('Username: $username');
-    print('Email: $email');
+  Future<void> signup() async {
+    String username = usernameController.text;
+    String email = emailController.text;
+    String password = passwordController.text;
+    String confirmPassword = confirmPasswordController.text;
 
-    // For security reasons, do not print or store passwords in plain text.
-    // Instead, you should hash or encrypt the password before sending it anywhere.
+    String? usernameError = validateUsername(username);
+    String? emailError = validateEmail(email);
+    String? passwordError = validatePassword(password);
+    String? confirmPasswordError =
+        validateConfirmPassword(password, confirmPassword);
+
+    if (usernameError != null) {
+      throw Exception(usernameError);
+    }
+    if (emailError != null) {
+      throw Exception(emailError);
+    }
+    if (passwordError != null) {
+      throw Exception(passwordError);
+    }
+    if (confirmPasswordError != null) {
+      throw Exception(confirmPasswordError);
+    }
+
+    // Create user data map
+    Map<String, dynamic> userData = {
+      'username': username,
+      'email': email,
+      'password': password, // Ensure you hash the password in a real app
+    };
+    debugPrint("userDAta : $userData");
+    debugPrint("userDAta username : ${userData['username']}");
+    // Insert user data into the database
+    int result = await _databaseNourProject.insert('users', userData);
+    if (result == 0) {
+      throw Exception('Failed to register user');
+    }
   }
 
   String? validateUsername(String? username) {
     if (username == null || username.isEmpty) {
       return 'Username is required';
     }
-    //add more
+    // Add more validation rules if needed
     return null;
   }
 
@@ -31,7 +62,6 @@ class SignupController {
     if (email == null || email.isEmpty) {
       return 'Email is required';
     }
-    // email validation check
     if (!email.contains('@')) {
       return 'Please enter a valid email address';
     }
@@ -42,14 +72,12 @@ class SignupController {
     if (password == null || password.isEmpty) {
       return 'Password is required';
     }
-    // Simple password length check
     if (password.length < 6) {
       return 'Password must be at least 6 characters';
     }
     return null;
   }
 
-  // Function to validate confirm password for signup
   String? validateConfirmPassword(String? password, String? confirmPassword) {
     if (confirmPassword == null || confirmPassword.isEmpty) {
       return 'Confirm password is required';

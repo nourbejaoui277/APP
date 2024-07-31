@@ -9,23 +9,29 @@ class LocalDbService {
   // Local service transforms data returned from the Database class and then returns it to the controller
 
   Future<int> saveUser(UserModel model) async {
-    return await databaseNourProject.insertUser("nomTable", model.dataMap());
+    return await databaseNourProject.registerUser(model.dataMap());
   }
 
   Future<List<Map<String, dynamic>>> readAllUsers() async {
-    return await databaseNourProject.readAllUsers("nomTable");
+    return await databaseNourProject.readAllUsers();
   }
 
   Future<List<Map<String, dynamic>>> readUserByName(
       String firstname, String lastname) async {
+    // Adjusted to match the column names in the database schema
     return await databaseNourProject.readUserByName(firstname, lastname);
   }
 
   Future<int> deleteUser(int id) async {
-    return await databaseNourProject.deleteUser("nomTable", id);
+    return await databaseNourProject.deleteUser(id);
   }
 
   Future<int> updateUser(UserModel model) async {
-    return await databaseNourProject.updateUser("nomTable", model.dataMap());
+    return await databaseNourProject.updateUser(model.dataMap());
+  }
+
+  Future<Map<String, dynamic>?> loginUser(
+      String username, String password) async {
+    return await databaseNourProject.loginUser(username, password);
   }
 }
