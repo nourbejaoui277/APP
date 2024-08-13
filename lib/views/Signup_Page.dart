@@ -97,7 +97,12 @@ class SignupPage extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () async {
                       try {
-                        await _signupController.signup();
+                        await _signupController.signup(
+                          _signupController.usernameController.text,
+                          _signupController.emailController.text,
+                          _signupController.passwordController.text,
+                          _signupController.confirmPasswordController.text,
+                        );
                         Fluttertoast.showToast(msg: "Sign up successful!");
                         Navigator.pop(context);
                       } catch (e) {
@@ -114,7 +119,30 @@ class SignupPage extends StatelessWidget {
                       backgroundColor: Colors.purple,
                     ),
                   )),
-              const Center(child: Text("Or")),
+
+              // Container(
+              //     padding: const EdgeInsets.only(top: 3, left: 3),
+              //     child: ElevatedButton(
+              //       onPressed: () async {
+              //         try {
+              //           await _signupController.signup;
+              //           Fluttertoast.showToast(msg: "Sign up successful!");
+              //           Navigator.pop(context);
+              //         } catch (e) {
+              //           Fluttertoast.showToast(msg: e.toString());
+              //         }
+              //       },
+              //       child: const Text(
+              //         "Sign up",
+              //         style: TextStyle(fontSize: 20),
+              //       ),
+              //       style: ElevatedButton.styleFrom(
+              //         shape: const StadiumBorder(),
+              //         padding: const EdgeInsets.symmetric(vertical: 16),
+              //         backgroundColor: Colors.purple,
+              //       ),
+              //     )),
+              // const Center(child: Text("Or")),
               Container(
                 height: 45,
                 decoration: BoxDecoration(

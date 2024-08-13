@@ -19,8 +19,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sparkling'),
-        backgroundColor: Colors.purple,
+        title: Text('AURA'),
+        backgroundColor: Color.fromRGBO(47, 56, 97, 0),
       ),
       body: _buildPageContent(),
       bottomNavigationBar: _buildBottomNavigationBar(context),
@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildPageTitle('Sparkling'),
+          _buildPageTitle('AURA'),
           SizedBox(height: 16),
           _buildCategories(context),
           SizedBox(height: 16),
@@ -169,7 +169,9 @@ class _HomePageState extends State<HomePage> {
         color: Colors.redAccent.withOpacity(0.1),
         borderRadius: BorderRadius.circular(18),
       ),
-      child: Center(child: Text('Promotion 1')),
+      child: Center(
+          child: Text('Promotion 1',
+              semanticsLabel: 'assets/images/promotion.jpg')),
     );
   }
 
@@ -202,7 +204,7 @@ class _HomePageState extends State<HomePage> {
       margin: const EdgeInsets.symmetric(vertical: 10),
       height: 100,
       decoration: BoxDecoration(
-        color: Colors.purpleAccent.withOpacity(0.1),
+        color: Color.fromRGBO(47, 56, 97, 0).withOpacity(0.1),
         borderRadius: BorderRadius.circular(18),
       ),
       child: Center(child: Text('Selections for You')),

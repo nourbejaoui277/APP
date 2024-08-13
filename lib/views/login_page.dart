@@ -5,7 +5,6 @@ import 'home_page.dart';
 import 'package:app1/controllers/login_controller.dart';
 
 class LoginPage extends StatelessWidget {
-  // injection of login controller
   final LoginController _loginController = LoginController();
   LoginPage({super.key});
 
@@ -44,7 +43,6 @@ class LoginPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         TextField(
-          // added controller to read input values
           controller: _loginController.usernameController,
           decoration: InputDecoration(
               hintText: "Username",
@@ -57,7 +55,6 @@ class LoginPage extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         TextField(
-          // added controller to read input values
           controller: _loginController.passwordController,
           decoration: InputDecoration(
             hintText: "Password",
@@ -73,36 +70,15 @@ class LoginPage extends StatelessWidget {
         const SizedBox(height: 10),
         ElevatedButton(
           onPressed: () async {
-            if (_loginController.usernameController.text == "" ||
-                _loginController.passwordController.text == "") {
-              Fluttertoast.showToast(msg: "Username & password are empty");
-              return;
-            } else if (_loginController.validateUsername(
-                    _loginController.usernameController.text) !=
-                null) {
-              Fluttertoast.showToast(
-                  msg: _loginController.validateUsername(
-                      _loginController.usernameController.text)!);
-              return;
-            } else if (_loginController.validatePassword(
-                    _loginController.passwordController.text) !=
-                null) {
-              Fluttertoast.showToast(
-                  msg: _loginController.validatePassword(
-                      _loginController.passwordController.text)!);
-              return;
-            } else {
-              bool loginSuccess = await _loginController.loginUser();
-              if (loginSuccess) {
-                Fluttertoast.showToast(msg: "Success");
-                // Navigate to HomePage on successful login
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
-              } else {
-                Fluttertoast.showToast(msg: "Invalid username or password");
-              }
+            try {
+              await _loginController.login(
+                _loginController.usernameController.text,
+                _loginController.passwordController.text,
+              );
+              Fluttertoast.showToast(msg: "Login successful!");
+              Navigator.pushReplacementNamed(context, '/roleSelection');
+            } catch (e) {
+              Fluttertoast.showToast(msg: e.toString());
             }
           },
           style: ElevatedButton.styleFrom(
@@ -115,6 +91,33 @@ class LoginPage extends StatelessWidget {
             style: TextStyle(fontSize: 20),
           ),
         )
+
+        // ElevatedButton(
+        //   onPressed: () async {
+        //     try {
+        //       await _loginController.login(
+        //         _loginController.usernameController.text,
+        //         _loginController.passwordController.text,
+        //       );
+        //       Fluttertoast.showToast(msg: "Login successful!");
+        //       Navigator.pushReplacement(
+        //         context,
+        //         MaterialPageRoute(builder: (context) => HomePage()),
+        //       );
+        //     } catch (e) {
+        //       Fluttertoast.showToast(msg: e.toString());
+        //     }
+        //   },
+        //   style: ElevatedButton.styleFrom(
+        //     shape: const StadiumBorder(),
+        //     padding: const EdgeInsets.symmetric(vertical: 16),
+        //     backgroundColor: Colors.purple,
+        //   ),
+        //   child: const Text(
+        //     "Login",
+        //     style: TextStyle(fontSize: 20),
+        //   ),
+        // )
       ],
     );
   }

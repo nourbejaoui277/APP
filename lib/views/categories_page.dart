@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:app1/views/men_page.dart';
+import 'package:app1/views/women_page.dart';
+import 'kids_page.dart';
+import 'accessories_page.dart';
+import 'shoes_page.dart';
+import 'electronics_page.dart';
 
 class CategoriesPage extends StatelessWidget {
   final String category;
@@ -38,8 +44,6 @@ class CategoriesPage extends StatelessWidget {
     'Accessories',
     'Shoes',
     'Electronics',
-    'Home',
-    'Sports',
   ];
 
   Widget _buildCategoryCard(BuildContext context, String category) {
@@ -73,7 +77,46 @@ class CategoriesPage extends StatelessWidget {
   }
 
   void _navigateToCategory(BuildContext context, String category) {
-    // Navigate to category-specific page
-    // Example: Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryProductsPage(category: category)));
+    switch (category) {
+      case 'Men':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MenPage()),
+        );
+        break;
+      case 'Women':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => WomenPage()),
+        );
+        break;
+      case 'Kids':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => KidsPage()),
+        );
+        break;
+      case 'Accessories':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AccessoriesPage()),
+        );
+        break;
+      case 'Shoes':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ShoesPage()),
+        );
+        break;
+      case 'Electronics':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ElectronicsPage()),
+        );
+        break;
+      default:
+        // Handle other categories or default case
+        break;
+    }
   }
 }

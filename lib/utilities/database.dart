@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'dart:async';
 
 class DatabaseNourProject {
   static final DatabaseNourProject _instance = DatabaseNourProject._internal();
@@ -32,19 +31,16 @@ class DatabaseNourProject {
     return mydb;
   }
 
-//users
   Future<void> _onCreateDatabase(Database db, int version) async {
     await db.execute('''
       CREATE TABLE users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
         email TEXT,
-        phone TEXT,
         username TEXT,
         password TEXT
       )
     ''');
-//stores
+
     await db.execute('''
       CREATE TABLE store (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,7 +50,7 @@ class DatabaseNourProject {
         FOREIGN KEY(productId) REFERENCES product(id)
       )
     ''');
-//products
+
     await db.execute('''
       CREATE TABLE product (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -62,7 +58,7 @@ class DatabaseNourProject {
         status TEXT
       )
     ''');
-//orders
+
     await db.execute('''
       CREATE TABLE orders (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -76,9 +72,7 @@ class DatabaseNourProject {
   }
 
   Future<void> _onUpgradingDatabase(
-      Database db, int oldVersion, int newVersion) async {
-    // Handle database upgrades if needed
-  }
+      Database db, int oldVersion, int newVersion) async {}
 
   Future<int> insert(String table, Map<String, dynamic> data) async {
     Database? mydb = await db;
@@ -89,7 +83,7 @@ class DatabaseNourProject {
   Future<List<Map<String, dynamic>>> queryAll(String table) async {
     Database? mydb = await db;
     List<Map<String, dynamic>> response = await mydb!.query(table);
-    return response;
+    return response.isNotEmpty ? response : [];
   }
 
   Future<List<Map<String, dynamic>>> queryBy(
@@ -97,7 +91,7 @@ class DatabaseNourProject {
     Database? mydb = await db;
     List<Map<String, dynamic>> response =
         await mydb!.query(table, where: '$column = ?', whereArgs: [value]);
-    return response;
+    return response.isNotEmpty ? response : [];
   }
 
   Future<int> delete(String table, int id) async {
@@ -126,9 +120,7 @@ class DatabaseNourProject {
 
   Future<Map<String, dynamic>?> loginUser(
       String username, String password) async {
-    debugPrint(
-      "username : $username",
-    );
+    debugPrint("username : $username");
     Database? mydb = await db;
     List<Map<String, dynamic>> response = await mydb!.query(
       'users',
@@ -144,7 +136,7 @@ class DatabaseNourProject {
   Future<List<Map<String, dynamic>>> readAllUsers() async {
     Database? mydb = await db;
     List<Map<String, dynamic>> response = await mydb!.query('users');
-    return response;
+    return response.isNotEmpty ? response : [];
   }
 
   Future<List<Map<String, dynamic>>> readUserByName(
@@ -153,7 +145,7 @@ class DatabaseNourProject {
     var response = await mydb!.rawQuery(
         "SELECT * FROM users WHERE name = ? AND username = ?",
         [lastname, firstname]);
-    return response;
+    return response.isNotEmpty ? response : [];
   }
 
   Future<int> deleteUser(int id) async {
