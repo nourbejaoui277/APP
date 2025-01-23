@@ -6,13 +6,13 @@ import 'privacy_page.dart';
 import 'account_management_page.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings'),
+        title: const Text('Settings'),
         backgroundColor: Colors.purple,
       ),
       body: Padding(
@@ -40,10 +40,10 @@ class SettingsPage extends StatelessWidget {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Text(
         title,
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -53,7 +53,7 @@ class SettingsPage extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          title: Text('Push Notifications'),
+          title: const Text('Push Notifications'),
           trailing: Switch(
             value: settingsController.pushNotificationsEnabled,
             onChanged: (value) {
@@ -62,7 +62,7 @@ class SettingsPage extends StatelessWidget {
           ),
         ),
         ListTile(
-          title: Text('Email Notifications'),
+          title: const Text('Email Notifications'),
           trailing: Switch(
             value: settingsController.emailNotificationsEnabled,
             onChanged: (value) {
@@ -71,7 +71,7 @@ class SettingsPage extends StatelessWidget {
           ),
         ),
         ListTile(
-          title: Text('View Notifications'),
+          title: const Text('View Notifications'),
           onTap: () {
             Navigator.push(
               context,
@@ -85,7 +85,7 @@ class SettingsPage extends StatelessWidget {
 
   Widget _buildPrivacySettings(BuildContext context) {
     return ListTile(
-      title: Text('Privacy Settings'),
+      title: const Text('Privacy Settings'),
       onTap: () {
         Navigator.push(
           context,
@@ -97,7 +97,7 @@ class SettingsPage extends StatelessWidget {
 
   Widget _buildAccountManagementSettings(BuildContext context) {
     return ListTile(
-      title: Text('Account Management'),
+      title: const Text('Account Management'),
       onTap: () {
         Navigator.push(
           context,

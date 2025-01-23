@@ -1,7 +1,8 @@
-// change_password_page.dart
 import 'package:flutter/material.dart';
 
 class ChangePasswordPage extends StatefulWidget {
+  const ChangePasswordPage({super.key});
+
   @override
   _ChangePasswordPageState createState() => _ChangePasswordPageState();
 }
@@ -25,7 +26,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       } else {
         // Show error message if new passwords do not match
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('New passwords do not match')),
+          const SnackBar(content: Text('New passwords do not match')),
         );
       }
     }
@@ -43,59 +44,100 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Change Password'),
-        backgroundColor: Colors.purple,
+        title: const Text(
+          'Change Password',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: const Color(0xFF2F3861),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
+              _buildPasswordField(
                 controller: _currentPasswordController,
-                decoration: InputDecoration(labelText: 'Current Password'),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your current password';
-                  }
-                  return null;
-                },
+                label: 'Current Password',
+                icon: Icons.lock,
               ),
-              TextFormField(
+              const SizedBox(height: 16),
+              _buildPasswordField(
                 controller: _newPasswordController,
-                decoration: InputDecoration(labelText: 'New Password'),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a new password';
-                  } else if (value.length < 6) {
-                    return 'Password must be at least 6 characters long';
-                  }
-                  return null;
-                },
+                label: 'New Password',
+                icon: Icons.lock_outline,
               ),
-              TextFormField(
+              const SizedBox(height: 16),
+              _buildPasswordField(
                 controller: _confirmPasswordController,
-                decoration: InputDecoration(labelText: 'Confirm New Password'),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please confirm your new password';
-                  }
-                  return null;
-                },
+                label: 'Confirm New Password',
+                icon: Icons.lock_reset,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _changePassword,
-                child: Text('Change Password'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF2F3861),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  'Change Password',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPasswordField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: true,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: const Color(0xFF2F3861)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Color(0xFF2F3861)),
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter $label';
+        } else if (label == 'New Password' && value.length < 6) {
+          return 'Password must be at least 6 characters long';
+        }
+        return null;
+      },
     );
   }
 }

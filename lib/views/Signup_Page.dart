@@ -1,6 +1,6 @@
-import 'package:app1/controllers/signup_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:app1/controllers/signup_controller.dart';
 
 class SignupPage extends StatelessWidget {
   final SignupController _signupController = SignupController();
@@ -22,170 +22,78 @@ class SignupPage extends StatelessWidget {
                 children: <Widget>[
                   const SizedBox(height: 60.0),
                   const Text(
-                    "Sign up",
+                    "Sign Up",
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
+                      color: Color(0xFF2F3861),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20),
                   Text(
                     "Create your account",
                     style: TextStyle(fontSize: 15, color: Colors.grey[700]),
-                  )
+                  ),
                 ],
               ),
               Column(
                 children: <Widget>[
-                  TextField(
+                  _buildTextField(
                     controller: _signupController.usernameController,
-                    decoration: InputDecoration(
-                        hintText: "Username",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(18),
-                            borderSide: BorderSide.none),
-                        fillColor: Colors.purple.withOpacity(0.1),
-                        filled: true,
-                        prefixIcon: const Icon(Icons.person)),
+                    hintText: "Username",
+                    icon: Icons.person,
                   ),
                   const SizedBox(height: 20),
-                  TextField(
+                  _buildTextField(
                     controller: _signupController.emailController,
-                    decoration: InputDecoration(
-                        hintText: "Email",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(18),
-                            borderSide: BorderSide.none),
-                        fillColor: Colors.purple.withOpacity(0.1),
-                        filled: true,
-                        prefixIcon: const Icon(Icons.email)),
+                    hintText: "Email",
+                    icon: Icons.email,
                   ),
                   const SizedBox(height: 20),
-                  TextField(
+                  _buildTextField(
                     controller: _signupController.passwordController,
-                    decoration: InputDecoration(
-                      hintText: "Password",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide: BorderSide.none),
-                      fillColor: Colors.purple.withOpacity(0.1),
-                      filled: true,
-                      prefixIcon: const Icon(Icons.password),
-                    ),
-                    obscureText: true,
+                    hintText: "Password",
+                    icon: Icons.lock,
+                    isPassword: true,
                   ),
                   const SizedBox(height: 20),
-                  TextField(
+                  _buildTextField(
                     controller: _signupController.confirmPasswordController,
-                    decoration: InputDecoration(
-                      hintText: "Confirm Password",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide: BorderSide.none),
-                      fillColor: Colors.purple.withOpacity(0.1),
-                      filled: true,
-                      prefixIcon: const Icon(Icons.password),
-                    ),
-                    obscureText: true,
+                    hintText: "Confirm Password",
+                    icon: Icons.lock,
+                    isPassword: true,
                   ),
                 ],
               ),
               Container(
-                  padding: const EdgeInsets.only(top: 3, left: 3),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      try {
-                        await _signupController.signup(
-                          _signupController.usernameController.text,
-                          _signupController.emailController.text,
-                          _signupController.passwordController.text,
-                          _signupController.confirmPasswordController.text,
-                        );
-                        Fluttertoast.showToast(msg: "Sign up successful!");
-                        Navigator.pop(context);
-                      } catch (e) {
-                        Fluttertoast.showToast(msg: e.toString());
-                      }
-                    },
-                    child: const Text(
-                      "Sign up",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: Colors.purple,
-                    ),
-                  )),
-
-              // Container(
-              //     padding: const EdgeInsets.only(top: 3, left: 3),
-              //     child: ElevatedButton(
-              //       onPressed: () async {
-              //         try {
-              //           await _signupController.signup;
-              //           Fluttertoast.showToast(msg: "Sign up successful!");
-              //           Navigator.pop(context);
-              //         } catch (e) {
-              //           Fluttertoast.showToast(msg: e.toString());
-              //         }
-              //       },
-              //       child: const Text(
-              //         "Sign up",
-              //         style: TextStyle(fontSize: 20),
-              //       ),
-              //       style: ElevatedButton.styleFrom(
-              //         shape: const StadiumBorder(),
-              //         padding: const EdgeInsets.symmetric(vertical: 16),
-              //         backgroundColor: Colors.purple,
-              //       ),
-              //     )),
-              // const Center(child: Text("Or")),
-              Container(
-                height: 45,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  border: Border.all(
-                    color: Colors.purple,
+                padding: const EdgeInsets.only(top: 3, left: 3),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      await _signupController.signup(
+                        _signupController.usernameController.text,
+                        _signupController.emailController.text,
+                        _signupController.passwordController.text,
+                        _signupController.confirmPasswordController.text,
+                      );
+                      Fluttertoast.showToast(msg: "Sign up successful!");
+                      Navigator.pop(context);
+                    } catch (e) {
+                      Fluttertoast.showToast(msg: e.toString());
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: const StadiumBorder(),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: const Color(0xFF2F3861),
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 1,
-                      offset: const Offset(0, 1), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: TextButton(
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 30.0,
-                        width: 30.0,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage('login_signup/google.png'),
-                              fit: BoxFit.cover),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 18),
-                      const Text(
-                        "Sign In with Google",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.purple,
-                        ),
-                      ),
-                    ],
+                  child: const Text(
+                    "Sign Up",
+                    style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
                 ),
               ),
+              _buildGoogleSignInButton(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -196,13 +104,84 @@ class SignupPage extends StatelessWidget {
                     },
                     child: const Text(
                       "Login",
-                      style: TextStyle(color: Colors.purple),
+                      style: TextStyle(color: Color(0xFF2F3861)),
                     ),
-                  )
+                  ),
                 ],
-              )
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    required IconData icon,
+    bool isPassword = false,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: isPassword,
+      decoration: InputDecoration(
+        hintText: hintText,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: BorderSide.none,
+        ),
+        fillColor: Colors.purple.withOpacity(0.1),
+        filled: true,
+        prefixIcon: Icon(icon, color: const Color(0xFF2F3861)),
+      ),
+    );
+  }
+
+  Widget _buildGoogleSignInButton() {
+    return Container(
+      height: 45,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+        border: Border.all(
+          color: const Color(0xFF2F3861),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.white.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 1,
+            offset: const Offset(0, 1), // changes position of shadow
+          ),
+        ],
+      ),
+      child: TextButton(
+        onPressed: () {
+          // Implement Google Sign-In functionality
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              height: 30.0,
+              width: 30.0,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('login_signup/google.png'),
+                  fit: BoxFit.cover,
+                ),
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 18),
+            const Text(
+              "Sign In with Google",
+              style: TextStyle(
+                fontSize: 16,
+                color: Color(0xFF2F3861),
+              ),
+            ),
+          ],
         ),
       ),
     );

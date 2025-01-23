@@ -4,152 +4,212 @@ import 'signup_page.dart';
 import 'home_page.dart';
 import 'package:app1/controllers/login_controller.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final LoginController _loginController = LoginController();
-  LoginPage({super.key});
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+
+  Future<void> _login() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
+      try {
+        await _loginController.login(
+          _loginController.usernameController.text,
+          _loginController.passwordController.text,
+        );
+        Fluttertoast.showToast(msg: "Login successful!");
+        Navigator.pushReplacementNamed(context, '/roleSelection');
+      } catch (e) {
+        Fluttertoast.showToast(msg: e.toString());
+      } finally {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          height: MediaQuery.of(context).size.height,
+          width: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  const SizedBox(height: 60.0),
+                  const Text(
+                    "Login",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF2F3861),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    "Enter your credentials to continue",
+                    style: TextStyle(fontSize: 15, color: Colors.grey[700]),
+                  ),
+                ],
+              ),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    _buildTextField(
+                      controller: _loginController.usernameController,
+                      hintText: "Username",
+                      icon: Icons.person,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your username';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    _buildTextField(
+                      controller: _loginController.passwordController,
+                      hintText: "Password",
+                      icon: Icons.lock,
+                      isPassword: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(top: 3, left: 3),
+                child: ElevatedButton(
+                  onPressed: _isLoading ? null : _login,
+                  style: ElevatedButton.styleFrom(
+                    shape: const StadiumBorder(),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: const Color(0xFF2F3861),
+                  ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          "Login",
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        ),
+                ),
+              ),
+              _buildGoogleSignInButton(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text("Don't have an account?"),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignupPage(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Sign Up",
+                      style: TextStyle(color: Color(0xFF2F3861)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    required IconData icon,
+    bool isPassword = false,
+    required String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: isPassword,
+      decoration: InputDecoration(
+        hintText: hintText,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: BorderSide.none,
+        ),
+        fillColor: Colors.purple.withOpacity(0.1),
+        filled: true,
+        prefixIcon: Icon(icon, color: const Color(0xFF2F3861)),
+      ),
+      validator: validator,
+    );
+  }
+
+  Widget _buildGoogleSignInButton() {
+    return Container(
+      height: 45,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+        border: Border.all(
+          color: const Color(0xFF2F3861),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.white.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 1,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: TextButton(
+        onPressed: () {
+          // Implement Google Sign-In functionality
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _header(context),
-            _inputField(context),
-            _forgotPassword(context),
-            _signup(context),
+            Container(
+              height: 30.0,
+              width: 30.0,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('login_signup/google.png'),
+                  fit: BoxFit.cover,
+                ),
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 18),
+            const Text(
+              "Sign In with Google",
+              style: TextStyle(
+                fontSize: 16,
+                color: Color(0xFF2F3861),
+              ),
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _header(BuildContext context) {
-    return const Column(
-      children: [
-        Text(
-          "Welcome Back",
-          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-        ),
-        Text("Enter your credentials to login"),
-      ],
-    );
-  }
-
-  Widget _inputField(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        TextField(
-          controller: _loginController.usernameController,
-          decoration: InputDecoration(
-              hintText: "Username",
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  borderSide: BorderSide.none),
-              fillColor: Colors.purple.withOpacity(0.1),
-              filled: true,
-              prefixIcon: const Icon(Icons.person)),
-        ),
-        const SizedBox(height: 10),
-        TextField(
-          controller: _loginController.passwordController,
-          decoration: InputDecoration(
-            hintText: "Password",
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide.none),
-            fillColor: Colors.purple.withOpacity(0.1),
-            filled: true,
-            prefixIcon: const Icon(Icons.password),
-          ),
-          obscureText: true,
-        ),
-        const SizedBox(height: 10),
-        ElevatedButton(
-          onPressed: () async {
-            try {
-              await _loginController.login(
-                _loginController.usernameController.text,
-                _loginController.passwordController.text,
-              );
-              Fluttertoast.showToast(msg: "Login successful!");
-              Navigator.pushReplacementNamed(context, '/roleSelection');
-            } catch (e) {
-              Fluttertoast.showToast(msg: e.toString());
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            shape: const StadiumBorder(),
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: Colors.purple,
-          ),
-          child: const Text(
-            "Login",
-            style: TextStyle(fontSize: 20),
-          ),
-        )
-
-        // ElevatedButton(
-        //   onPressed: () async {
-        //     try {
-        //       await _loginController.login(
-        //         _loginController.usernameController.text,
-        //         _loginController.passwordController.text,
-        //       );
-        //       Fluttertoast.showToast(msg: "Login successful!");
-        //       Navigator.pushReplacement(
-        //         context,
-        //         MaterialPageRoute(builder: (context) => HomePage()),
-        //       );
-        //     } catch (e) {
-        //       Fluttertoast.showToast(msg: e.toString());
-        //     }
-        //   },
-        //   style: ElevatedButton.styleFrom(
-        //     shape: const StadiumBorder(),
-        //     padding: const EdgeInsets.symmetric(vertical: 16),
-        //     backgroundColor: Colors.purple,
-        //   ),
-        //   child: const Text(
-        //     "Login",
-        //     style: TextStyle(fontSize: 20),
-        //   ),
-        // )
-      ],
-    );
-  }
-
-  Widget _forgotPassword(BuildContext context) {
-    return TextButton(
-      onPressed: () {},
-      child: const Text(
-        "Forgot password?",
-        style: TextStyle(color: Colors.purple),
-      ),
-    );
-  }
-
-  Widget _signup(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text("Don't have an account? "),
-        TextButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SignupPage()),
-            );
-          },
-          child: const Text(
-            "Sign Up",
-            style: TextStyle(color: Colors.purple),
-          ),
-        )
-      ],
     );
   }
 }

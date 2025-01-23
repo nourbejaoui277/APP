@@ -17,24 +17,32 @@ class ProfilePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
-        backgroundColor: Colors.purple,
+        title: const Text(
+          'Profile',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: const Color(0xFF2F3861),
+        elevation: 0,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildProfileHeader(context, profileController),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildSectionTitle('Personal Information'),
             _buildPersonalInfo(context, profileController),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildSectionTitle('Order History'),
             _buildOrderHistory(context, profileController),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildSectionTitle('Settings'),
-            _buildSettings(context), // Pass context to _buildSettings
+            _buildSettings(context),
           ],
         ),
       ),
@@ -48,7 +56,7 @@ class ProfilePage extends StatelessWidget {
       children: [
         Stack(
           children: [
-            CircleAvatar(
+            const CircleAvatar(
               radius: 40,
               backgroundImage: AssetImage('assets/profile_pic.jpg'),
             ),
@@ -59,7 +67,7 @@ class ProfilePage extends StatelessWidget {
                 onTap: () {
                   // Implement edit profile picture functionality
                 },
-                child: CircleAvatar(
+                child: const CircleAvatar(
                   radius: 12,
                   backgroundColor: Colors.white,
                   child: Icon(Icons.edit, size: 15, color: Colors.purple),
@@ -68,23 +76,23 @@ class ProfilePage extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               profileController.name,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Text(
               profileController.email,
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Text(
               'Phone: ${profileController.phone}',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
         ),
@@ -94,10 +102,10 @@ class ProfilePage extends StatelessWidget {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Text(
         title,
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -105,13 +113,14 @@ class ProfilePage extends StatelessWidget {
   Widget _buildPersonalInfo(
       BuildContext context, ProfileController profileController) {
     return Card(
-      elevation: 3,
+      elevation: 5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Column(
         children: [
           ListTile(
-            leading: Icon(Icons.person),
-            title: Text('Edit Profile'),
+            leading: const Icon(Icons.person, color: Color(0xFF2F3861)),
+            title: const Text('Edit Profile'),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () async {
               final result = await Navigator.push(
                 context,
@@ -126,10 +135,11 @@ class ProfilePage extends StatelessWidget {
               );
             },
           ),
-          Divider(height: 1),
+          const Divider(height: 1),
           ListTile(
-            leading: Icon(Icons.lock),
-            title: Text('Change Password'),
+            leading: const Icon(Icons.lock, color: Color(0xFF2F3861)),
+            title: const Text('Change Password'),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
               Navigator.push(
                 context,
@@ -147,16 +157,18 @@ class ProfilePage extends StatelessWidget {
   Widget _buildOrderHistory(
       BuildContext context, ProfileController profileController) {
     return Card(
-      elevation: 3,
+      elevation: 5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Column(
         children: profileController.orders.map((order) {
           return Column(
             children: [
               ListTile(
-                leading: Icon(Icons.shopping_cart),
+                leading:
+                    const Icon(Icons.shopping_cart, color: Color(0xFF2F3861)),
                 title: Text('Order #${order.id}'),
                 subtitle: Text('Placed on ${order.date.toLocal()}'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -166,7 +178,7 @@ class ProfilePage extends StatelessWidget {
                   );
                 },
               ),
-              Divider(height: 1),
+              const Divider(height: 1),
             ],
           );
         }).toList(),
@@ -176,7 +188,7 @@ class ProfilePage extends StatelessWidget {
 
   Widget _buildSettings(BuildContext context) {
     return Card(
-      elevation: 3,
+      elevation: 5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Column(
         children: [
@@ -186,14 +198,14 @@ class ProfilePage extends StatelessWidget {
             title: 'Notifications',
             destination: NotificationsPage(),
           ),
-          Divider(height: 1),
+          const Divider(height: 1),
           _buildSettingsTile(
             context,
             icon: Icons.privacy_tip,
             title: 'Privacy',
             destination: PrivacyPage(),
           ),
-          Divider(height: 1),
+          const Divider(height: 1),
           _buildSettingsTile(
             context,
             icon: Icons.account_circle,
@@ -212,8 +224,9 @@ class ProfilePage extends StatelessWidget {
     required Widget destination,
   }) {
     return ListTile(
-      leading: Icon(icon),
+      leading: Icon(icon, color: const Color(0xFF2F3861)),
       title: Text(title),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       onTap: () {
         Navigator.push(
           context,

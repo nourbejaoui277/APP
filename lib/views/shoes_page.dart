@@ -1,33 +1,50 @@
 import 'package:flutter/material.dart';
 
 class ShoesPage extends StatelessWidget {
+  const ShoesPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Shoes'),
-        backgroundColor: Colors.purple,
+        title: const Text(
+          'Shoes',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: const Color(0xFF2F3861),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildPageTitle('Shoes'),
-            SizedBox(height: 16),
+            const SizedBox(height: 20),
+            _buildSectionTitle('Categories'),
             _buildCategories(context),
-            SizedBox(height: 16),
+            const SizedBox(height: 20),
             _buildSectionTitle('New Arrivals'),
             _buildNewArrivals(),
-            SizedBox(height: 16),
+            const SizedBox(height: 20),
             _buildSectionTitle('Popular Picks'),
             _buildPopularPicks(),
-            SizedBox(height: 16),
+            const SizedBox(height: 20),
             _buildSectionTitle('Trending Now'),
             _buildTrendingNow(),
-            SizedBox(height: 16),
+            const SizedBox(height: 20),
             _buildSectionTitle('Recommended for You'),
             _buildRecommendedForYou(),
-            SizedBox(height: 16),
           ],
         ),
       ),
@@ -36,12 +53,15 @@ class ShoesPage extends StatelessWidget {
 
   Widget _buildPageTitle(String title) {
     return Container(
-      padding: EdgeInsets.all(16.0),
-      color: Colors.purple,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2F3861),
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Center(
         child: Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -56,63 +76,68 @@ class ShoesPage extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Color(0xFF2F3861),
+        ),
       ),
     );
   }
 
   Widget _buildCategories(BuildContext context) {
-    return Container(
-      height: 120,
+    return SizedBox(
+      height: 140,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          _buildCategoryCard(
-              'T-Shirts', 'assets/images/Shoes_tshirt.jpg', context),
-          _buildCategoryCard('Jeans', 'assets/images/Shoes_jeans.jpg', context),
-          _buildCategoryCard(
-              'Jackets', 'assets/images/Shoes_jacket.jpg', context),
-          _buildCategoryCard('Shoes', 'assets/images/Shoes_shoes.jpg', context),
-          _buildCategoryCard(
-              'Accessories', 'assets/images/Shoes_accessories.jpg', context),
+          _buildCategoryCard('Sneakers', 'assets/images/shoes_sneakers.jpg'),
+          const SizedBox(width: 12),
+          _buildCategoryCard('Boots', 'assets/images/shoes_boots.jpg'),
+          const SizedBox(width: 12),
+          _buildCategoryCard('Sandals', 'assets/images/shoes_sandals.jpg'),
+          const SizedBox(width: 12),
+          _buildCategoryCard('Heels', 'assets/images/shoes_heels.jpg'),
+          const SizedBox(width: 12),
+          _buildCategoryCard('Sports', 'assets/images/shoes_sports.jpg'),
         ],
       ),
     );
   }
 
-  Widget _buildCategoryCard(
-      String category, String imagePath, BuildContext context) {
+  Widget _buildCategoryCard(String category, String imagePath) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  ShoesPage()), // Or navigate to a specific category page
-        );
+        // Navigate to category page
       },
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
         child: Container(
           width: 120,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
             image: DecorationImage(
               image: AssetImage(imagePath),
               fit: BoxFit.cover,
             ),
           ),
-          child: Center(
-            child: Container(
-              color: Colors.black.withOpacity(0.5),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  category,
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Colors.black.withOpacity(0.6),
+                ],
+              ),
+            ),
+            child: Center(
+              child: Text(
+                category,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -124,49 +149,97 @@ class ShoesPage extends StatelessWidget {
 
   Widget _buildNewArrivals() {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      height: 100,
+      height: 150,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.blueAccent.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(15),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/shoes_new_arrivals.jpg'),
+          fit: BoxFit.cover,
+        ),
       ),
-      child: Center(child: Text('New Arrivals')),
+      child: const Center(
+        child: Text(
+          'New Arrivals',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildPopularPicks() {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      height: 100,
+      height: 150,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.greenAccent.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(15),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/shoes_popular_picks.jpg'),
+          fit: BoxFit.cover,
+        ),
       ),
-      child: Center(child: Text('Popular Picks')),
+      child: const Center(
+        child: Text(
+          'Popular Picks',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildTrendingNow() {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      height: 100,
+      height: 150,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.redAccent.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(15),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/shoes_trending_now.jpg'),
+          fit: BoxFit.cover,
+        ),
       ),
-      child: Center(child: Text('Trending Now')),
+      child: const Center(
+        child: Text(
+          'Trending Now',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildRecommendedForYou() {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      height: 100,
+      height: 150,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.purpleAccent.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(15),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/shoes_recommended.jpg'),
+          fit: BoxFit.cover,
+        ),
       ),
-      child: Center(child: Text('Recommended for You')),
+      child: const Center(
+        child: Text(
+          'Recommended for You',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 }

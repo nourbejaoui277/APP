@@ -30,9 +30,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  sqflite: any
-  path: any
-  crypto: ^3.0.1  
+  sqflite: ^2.4.0
+  path: ^1.9.0
+  crypto: ^3.0.6
+  fl_chart: ^0.69.0
+  smooth_page_indicator: ^1.0.0
+  shared_preferences: ^2.0.15
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -40,9 +44,9 @@ dependencies:
   cupertino_icons: ^1.0.6
   #sqflite: ^2.3.3+1
   flutter_screenutil: ^5.9.3
-  fluttertoast: ^8.2.6
-  carousel_slider: ^4.0.0  #newchangedline
-  provider: ^5.0.0
+  fluttertoast: ^8.2.8
+  carousel_slider: ^5.0.0  #newchangedline
+  provider: ^6.1.2
   
 dev_dependencies:
   flutter_test:
@@ -70,14 +74,28 @@ flutter:
   assets:
     - assets/images/men.jpg
     - assets/images/women.jpg
-    - assets/images/kids.jpg
-    - assets/images/accessories.jpg
+    - assets/images/kids.png
+    - assets/images/accessories.png
     - assets/images/men_tshirt.jpg
     - assets/images/men_jeans.jpg
     - assets/images/men_jacket.jpg
     - assets/images/men_shoes.jpg
     - assets/images/men_accessories.jpg
     - assets/images/promotion.jpg
+    - assets/images/accessories_watches.jpg
+    - assets/images/accessories_bags.jpg
+    - assets/images/accessories_sunglasses.png
+    - assets/images/accessories_jewelry.png
+    - assets/images/accessories_hats.png
+    - assets/images/accessories_new_arrivals.png
+    - assets/images/accessories_popular_picks.png
+    - assets/images/accessories_trending_now.png
+    - assets/images/accessories_recommended.png 
+    - assets/images/bestseller.png
+    - assets/images/mood.png
+    - assets/images/selected.png
+    
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
