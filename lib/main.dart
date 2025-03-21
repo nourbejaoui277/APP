@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
             backgroundColor: Color(0xFF2F3861), // Updated color globally
           ),
         ),
-        initialRoute: '/roleSelection',
+        initialRoute: '/login',
         routes: {
           '/login': (context) => const LoginPage(),
           '/roleSelection': (context) => RoleSelectionPage(),

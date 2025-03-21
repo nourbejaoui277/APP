@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'signup_page.dart';
-import 'home_page.dart';
 import 'package:app1/controllers/login_controller.dart';
 
 class LoginPage extends StatefulWidget {
@@ -16,13 +15,16 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       try {
         await _loginController.login(
-          _loginController.usernameController.text,
-          _loginController.passwordController.text,
+          _emailController.text,
+          _passwordController.text,
         );
         Fluttertoast.showToast(msg: "Login successful!");
         Navigator.pushReplacementNamed(context, '/roleSelection');
@@ -69,19 +71,19 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   children: <Widget>[
                     _buildTextField(
-                      controller: _loginController.usernameController,
-                      hintText: "Username",
-                      icon: Icons.person,
+                      controller: _emailController,
+                      hintText: "Email",
+                      icon: Icons.email,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your username';
+                          return 'Please enter your email';
                         }
                         return null;
                       },
                     ),
                     const SizedBox(height: 20),
                     _buildTextField(
-                      controller: _loginController.passwordController,
+                      controller: _passwordController,
                       hintText: "Password",
                       icon: Icons.lock,
                       isPassword: true,
@@ -183,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       child: TextButton(
         onPressed: () {
-          // Implement Google Sign-In functionality
+          // Implement Google Sign-In functionality later
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -193,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
               width: 30.0,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('login_signup/google.png'),
+                  image: AssetImage('assets/images/google.png'),
                   fit: BoxFit.cover,
                 ),
                 shape: BoxShape.circle,

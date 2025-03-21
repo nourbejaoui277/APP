@@ -1,6 +1,8 @@
+import 'package:app1/services/user_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
-import 'dart:convert'; // for utf8.encode
+import 'dart:convert';
 import 'package:app1/utilities/database.dart';
 
 class SignupController {
@@ -33,27 +35,36 @@ class SignupController {
       throw Exception(confirmPasswordError);
     }
 
-    // Hash the password before storing it
-    var bytes = utf8.encode(password);
-    var hashedPassword = sha256.convert(bytes).toString();
-
-    // Insert the user into the database
-    await _databaseNourProject.insert('users', {
-      'username': username,
+    await UserService().createUser({
+      'name': username,
       'email': email,
-      'password': hashedPassword,
+      'password': password,
+    }).then((result) {
+      debugPrint("result: $result");
+      if (kDebugMode) {
+        print('Signing up user with:');
+        print('Username: $username');
+        print('Email: $email');
+      }
     });
 
-    print('Signing up user with:');
-    print('Username: $username');
-    print('Email: $email');
+    // // Hash the password before storing it
+    // var bytes = utf8.encode(password);
+    // var hashedPassword = sha256.convert(bytes).toString();
+
+    // // Insert the user into the database
+    // await _databaseNourProject.insert('users', {
+    //   'username': username,
+    //   'email': email,
+    //   'password': hashedPassword,
+    // });
   }
 
   String? validateUsername(String? username) {
     if (username == null || username.isEmpty) {
       return 'Username is required';
     }
-    // add more validation rules as needed
+
     return null;
   }
 
@@ -61,7 +72,7 @@ class SignupController {
     if (email == null || email.isEmpty) {
       return 'Email is required';
     }
-    // email validation check
+
     if (!email.contains('@')) {
       return 'Please enter a valid email address';
     }
@@ -72,14 +83,13 @@ class SignupController {
     if (password == null || password.isEmpty) {
       return 'Password is required';
     }
-    // Simple password length check
+
     if (password.length < 6) {
       return 'Password must be at least 6 characters';
     }
     return null;
   }
 
-  // Function to validate confirm password for signup
   String? validateConfirmPassword(String? password, String? confirmPassword) {
     if (confirmPassword == null || confirmPassword.isEmpty) {
       return 'Confirm password is required';

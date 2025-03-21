@@ -1,52 +1,74 @@
 import 'package:flutter/material.dart';
-import 'package:crypto/crypto.dart';
-import 'dart:convert'; // for utf8.encode
-import 'package:app1/utilities/database.dart';
+import 'package:app1/services/user_service.dart';
+import 'dart:convert';
 
 class LoginController {
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  final DatabaseNourProject _databaseNourProject = DatabaseNourProject();
-
-  Future<void> login(String username, String password) async {
-    String? usernameError = validateUsername(username);
+  final UserService _userService = UserService();
+  Future<void> login(String email, String password) async {
+    String? emailError = validateEmail(email);
     String? passwordError = validatePassword(password);
 
-    if (usernameError != null) {
-      throw Exception(usernameError);
+    if (emailError != null) {
+      throw Exception(emailError);
     }
     if (passwordError != null) {
       throw Exception(passwordError);
     }
 
-    // Fetch the stored user data
-    List<Map<String, dynamic>> result = await _databaseNourProject.queryBy(
-      'users',
-      'username',
-      username,
-    );
+    try {
+      final response = await _userService.login({
+        "email": email,
+        "password": password,
+      });
 
-    if (result.isEmpty) {
-      throw Exception('User not found');
+      if (response != null) {
+        print("Response Status Code: ${response.statusCode}");
+        print("Response Data: ${response.data}");
+
+        if (response.statusCode == 200) {
+          final responseData = response.data;
+
+          if (responseData.containsKey('token')) {
+            final tokenObject = responseData['token'];
+
+            if (tokenObject is Map<String, dynamic> &&
+                tokenObject.containsKey('token')) {
+              String token = tokenObject['token'];
+              print("Login successful! Token: $token");
+            } else {
+              print("Error: Token not found in response");
+              throw Exception("Token not found in response");
+            }
+          } else {
+            print("Error: Token object not found in response");
+            throw Exception("Token object not found in response");
+          }
+        } else if (response.statusCode == 401) {
+          print("Error: Invalid email or password");
+          throw Exception("Invalid email or password");
+        } else {
+          print("Error: ${response.statusMessage}");
+          print("Error Details: ${response.data}");
+          throw Exception("Login failed: ${response.statusMessage}");
+        }
+      } else {
+        print("Response is null");
+        throw Exception(
+            " response : $response // ${response?.statusCode} // ${response?.data}");
+      }
+    } catch (e) {
+      print("Login failed: $e");
+      throw Exception("Login failed: $e");
     }
-
-    // Compare the stored hash with the hash of the entered password
-    var bytes = utf8.encode(password);
-    var hashedPassword = sha256.convert(bytes).toString();
-    if (result[0]['password'] != hashedPassword) {
-      throw Exception('Invalid username or password');
-    }
-
-    // Successfully logged in
-    print('Logging in user with:');
-    print('Username: $username');
   }
 
-  String? validateUsername(String? username) {
-    if (username == null || username.isEmpty) {
-      return 'Username is required';
+  String? validateEmail(String? email) {
+    if (email == null || email.isEmpty) {
+      return 'Email is required';
     }
+
     return null;
   }
 
@@ -54,6 +76,7 @@ class LoginController {
     if (password == null || password.isEmpty) {
       return 'Password is required';
     }
+
     return null;
   }
 }

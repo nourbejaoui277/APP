@@ -10,12 +10,10 @@ class SettingsController extends ChangeNotifier {
   void setPushNotificationsEnabled(bool value) {
     _pushNotificationsEnabled = value;
     notifyListeners();
-    // Implement logic to update preferences in database or storage
   }
 
   void setEmailNotificationsEnabled(bool value) {
     _emailNotificationsEnabled = value;
     notifyListeners();
-    // Implement logic to update preferences in database or storage
   }
 }

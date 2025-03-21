@@ -100,7 +100,7 @@ class SignupPage extends StatelessWidget {
                   const Text("Already have an account?"),
                   TextButton(
                     onPressed: () {
-                      Navigator.pop(context); // Go back to the previous page
+                      Navigator.pop(context);
                     },
                     child: const Text(
                       "Login",
@@ -167,7 +167,7 @@ class SignupPage extends StatelessWidget {
               width: 30.0,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('login_signup/google.png'),
+                  image: AssetImage('assets/images/google.png'),
                   fit: BoxFit.cover,
                 ),
                 shape: BoxShape.circle,

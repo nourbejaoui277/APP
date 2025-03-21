@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:app1/controllers/product_controller.dart';
 
 class AddProductPage extends StatefulWidget {
   const AddProductPage({super.key});
@@ -9,17 +10,49 @@ class AddProductPage extends StatefulWidget {
 
 class _AddProductPageState extends State<AddProductPage> {
   final _formKey = GlobalKey<FormState>();
+  final _productController = ProductController();
+
   String _productName = '';
   String _productCategory = 'Category';
   double _price = 0.0;
   String _description = '';
 
-  // Placeholder for image upload functionality
-  // This can be replaced with an actual image picker integration
   void _uploadImage() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Image upload feature coming soon!')),
     );
+  }
+
+  Future<void> _addProduct() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        final productData = {
+          'name': _productName,
+          'category': _productCategory,
+          'price': _price,
+          'description': _description,
+        };
+
+        await _productController.addProduct(productData);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Product "$_productName" added successfully!')),
+        );
+
+        _formKey.currentState!.reset();
+        setState(() {
+          _productName = '';
+          _productCategory = 'Category';
+          _price = 0.0;
+          _description = '';
+        });
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to add product: $e')),
+        );
+      }
+    }
   }
 
   @override
@@ -54,6 +87,7 @@ class _AddProductPageState extends State<AddProductPage> {
                   labelText: 'Category',
                   border: OutlineInputBorder(),
                 ),
+                value: _productCategory,
                 items: ['Category 1', 'Category 2', 'Category 3']
                     .map((category) => DropdownMenuItem(
                           value: category,
@@ -98,6 +132,7 @@ class _AddProductPageState extends State<AddProductPage> {
                 onChanged: (value) => _description = value,
               ),
               const SizedBox(height: 20),
+              // Updated Upload Image Button
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF2F3861),
@@ -106,20 +141,12 @@ class _AddProductPageState extends State<AddProductPage> {
                 child: const Text('Upload Image'),
               ),
               const SizedBox(height: 20),
+              // Updated Add Product Button
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF2F3861),
                 ),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Save product to database
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text(
-                              'Product "$_productName" added successfully!')),
-                    );
-                  }
-                },
+                onPressed: _addProduct,
                 child: const Text('Add Product'),
               ),
             ],
