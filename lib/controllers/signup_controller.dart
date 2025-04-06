@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:app1/utilities/database.dart';
+import 'package:app1/services/auth_service.dart';
 
 class SignupController {
   final TextEditingController usernameController = TextEditingController();
@@ -13,9 +14,10 @@ class SignupController {
       TextEditingController();
 
   final DatabaseNourProject _databaseNourProject = DatabaseNourProject();
+  final AuthService _authService = AuthService();
 
   Future<void> signup(String username, String email, String password,
-      String confirmPassword) async {
+      String confirmPassword, String role) async {
     String? usernameError = validateUsername(username);
     String? emailError = validateEmail(email);
     String? passwordError = validatePassword(password);
@@ -47,7 +49,7 @@ class SignupController {
         print('Email: $email');
       }
     });
-
+    await _authService.saveUserRole(role);
     // // Hash the password before storing it
     // var bytes = utf8.encode(password);
     // var hashedPassword = sha256.convert(bytes).toString();

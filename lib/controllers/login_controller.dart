@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:app1/services/user_service.dart';
 import 'dart:convert';
+import 'package:app1/services/auth_service.dart';
 
 class LoginController {
   final TextEditingController passwordController = TextEditingController();
-
+  final AuthService _authService = AuthService();
   final UserService _userService = UserService();
+
   Future<void> login(String email, String password) async {
     String? emailError = validateEmail(email);
     String? passwordError = validatePassword(password);
@@ -37,6 +39,8 @@ class LoginController {
                 tokenObject.containsKey('token')) {
               String token = tokenObject['token'];
               print("Login successful! Token: $token");
+              String role = 'seller';
+              await _authService.saveUserRole(role);
             } else {
               print("Error: Token not found in response");
               throw Exception("Token not found in response");

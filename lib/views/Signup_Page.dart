@@ -75,6 +75,7 @@ class SignupPage extends StatelessWidget {
                         _signupController.emailController.text,
                         _signupController.passwordController.text,
                         _signupController.confirmPasswordController.text,
+                        'seller',
                       );
                       Fluttertoast.showToast(msg: "Sign up successful!");
                       Navigator.pop(context);

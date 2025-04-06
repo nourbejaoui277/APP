@@ -13,7 +13,7 @@ class _AddProductPageState extends State<AddProductPage> {
   final _productController = ProductController();
 
   String _productName = '';
-  String _productCategory = 'Category';
+  String? _productCategory;
   double _price = 0.0;
   String _description = '';
 
@@ -43,7 +43,7 @@ class _AddProductPageState extends State<AddProductPage> {
         _formKey.currentState!.reset();
         setState(() {
           _productName = '';
-          _productCategory = 'Category';
+          _productCategory = null;
           _price = 0.0;
           _description = '';
         });
@@ -73,7 +73,9 @@ class _AddProductPageState extends State<AddProductPage> {
                   labelText: 'Product Name',
                   border: OutlineInputBorder(),
                 ),
-                onChanged: (value) => _productName = value,
+                onChanged: (value) => setState(() {
+                  _productName = value;
+                }),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a product name';
@@ -82,7 +84,7 @@ class _AddProductPageState extends State<AddProductPage> {
                 },
               ),
               const SizedBox(height: 20),
-              DropdownButtonFormField(
+              DropdownButtonFormField<String>(
                 decoration: const InputDecoration(
                   labelText: 'Category',
                   border: OutlineInputBorder(),
@@ -95,8 +97,14 @@ class _AddProductPageState extends State<AddProductPage> {
                         ))
                     .toList(),
                 onChanged: (value) => setState(() {
-                  _productCategory = value as String;
+                  _productCategory = value;
                 }),
+                validator: (value) {
+                  if (value == null) {
+                    return 'Please select a category';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
               TextFormField(
@@ -105,13 +113,9 @@ class _AddProductPageState extends State<AddProductPage> {
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  try {
-                    _price = double.parse(value);
-                  } catch (e) {
-                    _price = 0.0;
-                  }
-                },
+                onChanged: (value) => setState(() {
+                  _price = double.tryParse(value) ?? 0.0;
+                }),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a price';
@@ -129,10 +133,11 @@ class _AddProductPageState extends State<AddProductPage> {
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 4,
-                onChanged: (value) => _description = value,
+                onChanged: (value) => setState(() {
+                  _description = value;
+                }),
               ),
               const SizedBox(height: 20),
-              // Updated Upload Image Button
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF2F3861),
@@ -141,7 +146,6 @@ class _AddProductPageState extends State<AddProductPage> {
                 child: const Text('Upload Image'),
               ),
               const SizedBox(height: 20),
-              // Updated Add Product Button
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF2F3861),

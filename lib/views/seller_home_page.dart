@@ -1,7 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:app1/services/auth_service.dart';
 
-class SellerHomePage extends StatelessWidget {
+class SellerHomePage extends StatefulWidget {
   const SellerHomePage({super.key});
+
+  @override
+  _SellerHomePageState createState() => _SellerHomePageState();
+}
+
+class _SellerHomePageState extends State<SellerHomePage> {
+  final AuthService _authService = AuthService();
+  String userRole = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _checkRole();
+  }
+
+  // Check the role of the user (admin/seller) when the page is loaded
+  Future<void> _checkRole() async {
+    String? role = await _authService.getUserRole();
+    setState(() {
+      userRole = role ?? ''; // Update the state based on role
+    });
+    print("User role is: $userRole"); // Debugging line to check the role
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,16 +39,31 @@ class SellerHomePage extends StatelessWidget {
           children: [
             const WelcomeMessage(),
             const SizedBox(height: 20),
-            DashboardButton(
-              icon: Icons.add_box,
-              label: 'Add Product',
-              onTap: () => _navigateTo(context, '/addProduct'),
-            ),
-            DashboardButton(
-              icon: Icons.list_alt,
-              label: 'Manage Orders',
-              onTap: () => _navigateTo(context, '/manageOrders'),
-            ),
+            // Check user role and show relevant options
+            if (userRole == 'admin') ...[
+              DashboardButton(
+                icon: Icons.add_box,
+                label: 'Add Product',
+                onTap: () => _navigateTo(context, '/addProduct'),
+              ),
+              DashboardButton(
+                icon: Icons.list_alt,
+                label: 'Manage Orders',
+                onTap: () => _navigateTo(context, '/manageOrders'),
+              ),
+            ],
+            if (userRole == 'seller') ...[
+              DashboardButton(
+                icon: Icons.add_box,
+                label: 'Add Product',
+                onTap: () => _navigateTo(context, '/addProduct'),
+              ),
+              DashboardButton(
+                icon: Icons.list_alt,
+                label: 'Manage Orders',
+                onTap: () => _navigateTo(context, '/manageOrders'),
+              ),
+            ],
             DashboardButton(
               icon: Icons.person,
               label: 'Seller Profile',
@@ -35,6 +74,10 @@ class SellerHomePage extends StatelessWidget {
               label: 'Sales Dashboard',
               onTap: () => _navigateTo(context, '/salesDashboard'),
             ),
+            // Show error message if the role is empty
+            if (userRole.isEmpty) ...[
+              const Text("Error: User role not found or invalid."),
+            ]
           ],
         ),
       ),
