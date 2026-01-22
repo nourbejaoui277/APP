@@ -18,55 +18,53 @@ class SignupController {
 
   Future<void> signup(String username, String email, String password,
       String confirmPassword, String role) async {
-    String? usernameError = validateUsername(username);
-    String? emailError = validateEmail(email);
-    String? passwordError = validatePassword(password);
-    String? confirmPasswordError =
-        validateConfirmPassword(password, confirmPassword);
+    final validationErrors = {
+      'username': validateUsername(username),
+      'email': validateEmail(email),
+      'password': validatePassword(password),
+      'confirmPassword': validateConfirmPassword(password, confirmPassword),
+    };
 
-    if (usernameError != null) {
-      throw Exception(usernameError);
-    }
-    if (emailError != null) {
-      throw Exception(emailError);
-    }
-    if (passwordError != null) {
-      throw Exception(passwordError);
-    }
-    if (confirmPasswordError != null) {
-      throw Exception(confirmPasswordError);
+    final errorMessages =
+        validationErrors.values.where((error) => error != null);
+    if (errorMessages.isNotEmpty) {
+      throw Exception(errorMessages.first);
     }
 
-    await UserService().createUser({
-      'name': username,
-      'email': email,
-      'password': password,
-    }).then((result) {
-      debugPrint("result: $result");
+    try {
+      final response = await UserService().createUser({
+        'name': username,
+        'email': email,
+        'password': password,
+        'role': role,
+      });
+
+      await _authService.saveUserRole(role);
+
       if (kDebugMode) {
-        print('Signing up user with:');
+        print('User signed up successfully:');
         print('Username: $username');
         print('Email: $email');
+        print('Role: $role');
       }
-    });
-    await _authService.saveUserRole(role);
-    // // Hash the password before storing it
-    // var bytes = utf8.encode(password);
-    // var hashedPassword = sha256.convert(bytes).toString();
+    } catch (e) {
+      final errorMessage = e.toString().contains('User already exists')
+          ? "This email is already registered."
+          : e.toString().contains('network')
+              ? "Network error. Please check your connection."
+              : "Signup failed. Please try again.";
 
-    // // Insert the user into the database
-    // await _databaseNourProject.insert('users', {
-    //   'username': username,
-    //   'email': email,
-    //   'password': hashedPassword,
-    // });
+      throw Exception(errorMessage);
+    }
   }
 
   String? validateUsername(String? username) {
     if (username == null || username.isEmpty) {
       return 'Username is required';
     }
-
+    if (username.length < 3) {
+      return 'Username must be at least 3 characters';
+    }
     return null;
   }
 
@@ -74,8 +72,8 @@ class SignupController {
     if (email == null || email.isEmpty) {
       return 'Email is required';
     }
-
-    if (!email.contains('@')) {
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    if (!emailRegex.hasMatch(email)) {
       return 'Please enter a valid email address';
     }
     return null;
@@ -85,7 +83,6 @@ class SignupController {
     if (password == null || password.isEmpty) {
       return 'Password is required';
     }
-
     if (password.length < 6) {
       return 'Password must be at least 6 characters';
     }
@@ -94,11 +91,18 @@ class SignupController {
 
   String? validateConfirmPassword(String? password, String? confirmPassword) {
     if (confirmPassword == null || confirmPassword.isEmpty) {
-      return 'Confirm password is required';
+      return 'Please confirm your password';
     }
     if (confirmPassword != password) {
-      return 'Password and Confirm Password do not match';
+      return 'Passwords do not match';
     }
     return null;
+  }
+
+  void dispose() {
+    usernameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
   }
 }

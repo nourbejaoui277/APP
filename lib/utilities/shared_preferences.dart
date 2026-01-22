@@ -6,6 +6,8 @@ class SharedPreference {
       SharedPreferences.getInstance() as SharedPreferences;
 
   static const _keyAccessToken = 'AccessToken';
+  static const _keyUserId = 'UserId';
+  static const _keyUserRole = 'UserRole';
 
   static Future init() async =>
       _preferences = await SharedPreferences.getInstance();
@@ -14,6 +16,16 @@ class SharedPreference {
       await _preferences.setString(_keyAccessToken, access);
 
   static String? getAccessToken() => _preferences.getString(_keyAccessToken);
+
+  static Future setUserId(String userId) async =>
+      await _preferences.setString(_keyUserId, userId);
+
+  static String? getUserId() => _preferences.getString(_keyUserId);
+
+  static Future setUserRole(String role) async =>
+      await _preferences.setString(_keyUserRole, role);
+
+  static String? getUserRole() => _preferences.getString(_keyUserRole);
 
   static Future clearSharedPreference() async {
     await _preferences.clear();

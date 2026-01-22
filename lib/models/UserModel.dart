@@ -5,6 +5,7 @@ class UserModel {
   String? username;
   String? password;
   String? email;
+  int? accountType;
 
   UserModel({
     this.id,
@@ -13,6 +14,7 @@ class UserModel {
     this.username,
     this.password,
     this.email,
+    this.accountType,
   });
 
   Map<String, dynamic> dataMap() {
@@ -23,6 +25,7 @@ class UserModel {
       'username': username,
       'password': password,
       'email': email,
+      'accountType': accountType,
     };
     return map;
   }
@@ -34,5 +37,6 @@ class UserModel {
     username = json['username'];
     password = json['password'];
     email = json['email'];
+    accountType = json['accountType'];
   }
 }

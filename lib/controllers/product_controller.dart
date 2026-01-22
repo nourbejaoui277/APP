@@ -1,97 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:app1/services/product_service.dart';
+import '../models/product_model.dart';
+import '../services/product_service.dart';
 
-class ProductController {
-  final ProductService _productService = ProductService();
+class ProductController extends ChangeNotifier {
+  final ProductService _service = ProductService();
+  List<Product> products = [];
+  bool isLoading = false;
 
-  Future<void> addProduct(Map<String, dynamic> productData) async {
+  Future<void> loadProducts() async {
+    isLoading = true;
+    notifyListeners();
     try {
-      final response = await _productService.addProduct(productData);
-      if (response != null && response.statusCode == 200) {
-        print("Product added successfully!");
-      } else {
-        print("Failed to add product: ${response?.statusMessage}");
-        throw Exception("Failed to add product");
-      }
+      products = await _service.fetchProducts();
     } catch (e) {
-      print(" Error adding product: $e");
-      throw Exception("Error adding product: $e");
+      debugPrint('Error loading products: $e');
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
   }
 
-  Future<void> updateProduct(Map<String, dynamic> productData) async {
+  Future<void> addProduct(Product product) async {
     try {
-      final response = await _productService.updateProduct(productData);
-      if (response != null && response.statusCode == 200) {
-        print("Product updated successfully!");
-      } else {
-        print(" Failed to update product: ${response?.statusMessage}");
-        throw Exception("Failed to update product");
-      }
+      await _service.addProduct(product);
+      await loadProducts();
     } catch (e) {
-      print("Error updating product: $e");
-      throw Exception("Error updating product: $e");
+      debugPrint('Error adding product: $e');
     }
   }
 
-  Future<void> deleteProduct(int id) async {
+  Future<void> updateProduct(Product product) async {
     try {
-      final response = await _productService.deleteProduct(id.toString());
-      if (response != null && response.statusCode == 200) {
-        print(" Product deleted successfully!");
-      } else {
-        print(" Failed to delete product: ${response?.statusMessage}");
-        throw Exception("Failed to delete product");
-      }
+      await _service.updateProduct(product);
+      await loadProducts();
     } catch (e) {
-      print("Error deleting product: $e");
-      throw Exception("Error deleting product: $e");
+      debugPrint('Error updating product: $e');
     }
   }
 
-  Future<Map<String, dynamic>> getProductById(int id) async {
+  Future<void> deleteProduct(String id) async {
     try {
-      final response = await _productService.getProductById(id.toString());
-      if (response != null && response.statusCode == 200) {
-        return response.data;
-      } else {
-        print(" Failed to fetch product: ${response?.statusMessage}");
-        throw Exception("Failed to fetch product");
-      }
+      await _service.deleteProduct(id);
+      await loadProducts();
     } catch (e) {
-      print("Error fetching product: $e");
-      throw Exception("Error fetching product: $e");
+      debugPrint('Error deleting product: $e');
     }
   }
 
-  Future<List<dynamic>> getAllProducts() async {
-    try {
-      final response = await _productService.getAllProducts();
-      if (response != null && response.statusCode == 200) {
-        return response.data;
-      } else {
-        print("Failed to fetch products: ${response?.statusMessage}");
-        throw Exception("Failed to fetch products");
-      }
-    } catch (e) {
-      print(" Error fetching products: $e");
-      throw Exception("Error fetching products: $e");
-    }
-  }
-
-  Future<List<dynamic>> getProductsByPageAndLimit(int page, int limit) async {
-    try {
-      final response =
-          await _productService.getProductsByPageAndLimit(page, limit);
-      if (response != null && response.statusCode == 200) {
-        return response.data;
-      } else {
-        print("Failed to fetch products: ${response?.statusMessage}");
-        throw Exception("Failed to fetch products");
-      }
-    } catch (e) {
-      print("Error fetching products: $e");
-      throw Exception("Error fetching products: $e");
-    }
+  List<Product> filterProducts({
+    required int sectionId,
+    String? subcategory,
+    required RangeValues priceRange,
+    int? boutiqueId,
+    required String searchQuery,
+    required Map<String, int> subcategories,
+  }) {
+    // Temporary fallback – just return all products for now
+    return products;
   }
 }

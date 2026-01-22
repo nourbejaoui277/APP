@@ -9,28 +9,28 @@ class ProfileController extends ChangeNotifier {
   List<Order> orders = [];
 
   ProfileController() {
-    fetchOrders();
+    // fetchOrders();
   }
 
-  void fetchOrders() {
-    orders = [
-      Order(
-        id: '12345',
-        date: DateTime(2024, 6, 12),
-        items: ['Item 1', 'Item 2'],
-        totalAmount: 50.0,
-        status: 'Delivered',
-      ),
-      Order(
-        id: '12346',
-        date: DateTime(2024, 6, 15),
-        items: ['Item 3', 'Item 4'],
-        totalAmount: 75.0,
-        status: 'Shipped',
-      ),
-    ];
-    notifyListeners();
-  }
+  // void fetchOrders() {
+  //   orders = [
+  //     Order(
+  //       id: '12345',
+  //       date: DateTime(2024, 6, 12),
+  //       items: ['Item 1', 'Item 2'],
+  //       totalAmount: 50.0,
+  //       status: 'Delivered',
+  //     ),
+  //     Order(
+  //       id: '12346',
+  //       date: DateTime(2024, 6, 15),
+  //       items: ['Item 3', 'Item 4'],
+  //       totalAmount: 75.0,
+  //       status: 'Shipped',
+  //     ),
+  //   ];
+  //   notifyListeners();
+  // }
 
   void updateProfile(String text, String text2, String text3) {}
 }
